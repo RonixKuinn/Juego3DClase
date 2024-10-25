@@ -41,8 +41,7 @@ public class NewBehaviourScript : MonoBehaviour
         _horizontal = Input.GetAxis("Horizontal");
         _vertical = Input.GetAxis("Vertical");
 
-        //Movement();
-        AinMovement();
+       
 
         if(Input.GetButtonDown("Jump") && IsGrounded())
         {
@@ -50,6 +49,15 @@ public class NewBehaviourScript : MonoBehaviour
         }
 
         Gravity();
+
+        if(Input.GetButton("Fire2"))
+        {
+            AinMovement();
+        }
+        else
+        {
+            Movement();
+        }
     }
 
     void AinMovement()
@@ -66,8 +74,10 @@ public class NewBehaviourScript : MonoBehaviour
             Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
             _controller.Move(moveDirection * _movementSpeed * Time.deltaTime);
         }
+
     }
-    /*void Movement()
+
+    void Movement()
     {
         Vector3 direction = new Vector3(_horizontal, 0, _vertical);
         
@@ -80,7 +90,7 @@ public class NewBehaviourScript : MonoBehaviour
             Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
             _controller.Move(moveDirection * _movementSpeed * Time.deltaTime);
         }
-    }*/
+    }
 
     void Gravity()
     {
