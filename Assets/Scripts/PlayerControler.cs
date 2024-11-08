@@ -20,6 +20,8 @@ public class NewBehaviourScript : MonoBehaviour
 
     [SerializeField] private float _jumpHeight = 1f;
 
+    [SerializeField] private float _pushForce = 10;
+
     //---------Gavedad-----------//
     [SerializeField] private float _gravity = -9.81f;
     [SerializeField] private Vector3 _playerGravity;
@@ -28,6 +30,8 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] Transform _sensorPosition;
     [SerializeField] float _sensorRadius = 0.5f;
     [SerializeField] LayerMask _sueloLayer;
+
+    private Vector3 moveDirection;
 
 
     void Awake()
@@ -58,6 +62,11 @@ public class NewBehaviourScript : MonoBehaviour
         {
             Movement();
         }
+
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            RayTest();
+        }
     }
 
     void AinMovement()
@@ -71,7 +80,7 @@ public class NewBehaviourScript : MonoBehaviour
 
         if(direction != Vector3.zero)
         {
-            Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
+            moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
             _controller.Move(moveDirection * _movementSpeed * Time.deltaTime);
         }
 
@@ -87,7 +96,7 @@ public class NewBehaviourScript : MonoBehaviour
             float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmothVelocity, _turnSmoothTime);
 
             transform.rotation = Quaternion.Euler(0, smoothAngle, 0);
-            Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
+            moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
             _controller.Move(moveDirection * _movementSpeed * Time.deltaTime);
         }
     }
@@ -116,10 +125,37 @@ public class NewBehaviourScript : MonoBehaviour
         return Physics.CheckSphere(_sensorPosition.position, _sensorRadius, _sueloLayer);
     }
 
+    void RayTest()
+    {
+        RaycastHit hit;
+        if(Physics.Raycast(transform.position, transform.forward, out hit, 10))
+        {
+            Debug.Log(hit.transform.name);
+            Debug.Log(hit.transform.position);
+            Debug.Log(hit.transform.gameObject.layer);
+
+            if(hit.transform.gameObject.tag == "Enemy")
+            {
+                Enemy enemyScript = hit.transform.gameObject.GetComponent<Enemy>();
+                enemyScript.TakeDamage();
+            }
+        }
+    }
+
     void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(_sensorPosition.position,_sensorRadius);
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Rigidbody rBody = hit.collider.attachedRigidbody;
+        if(rBody != null)
+        {
+            Vector3 pushDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
+            rBody.velocity = pushDirection * _pushForce / rBody.mass;
+        }
     }
 
     void Start()
