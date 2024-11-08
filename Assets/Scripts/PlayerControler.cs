@@ -120,9 +120,30 @@ public class NewBehaviourScript : MonoBehaviour
         _playerGravity.y = Mathf.Sqrt(_jumpHeight * -2 * _gravity);
     }
 
-    bool IsGrounded()
+    /*bool IsGrounded()
     {
         return Physics.CheckSphere(_sensorPosition.position, _sensorRadius, _sueloLayer);
+    }*/
+
+    bool IsGrounded()
+    {
+        RaycastHit hit;
+        if(Physics.Raycast(_sensorPosition.position, -transform.up, out hit, 2))
+        {
+            if(hit.transform.gameObject.layer == 3)
+            {
+                Debug.DrawRay(_sensorPosition.position, -transform.up * 2, Color.green);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 
     void RayTest()
