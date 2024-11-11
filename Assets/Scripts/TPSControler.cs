@@ -10,6 +10,10 @@ public class TPSControler : MonoBehaviour
     private Transform _camera;
     private Transform _lookAtPlayer;
 
+    //---------Cameras-----------//
+    [SerializeField] private GameObject _normalCamera;
+    [SerializeField] private GameObject _aimCamera;
+
     //---------Inputs-----------//
     private float _horizontal;
     private float _vertical;
@@ -44,6 +48,17 @@ public class TPSControler : MonoBehaviour
         _horizontal = Input.GetAxis("Horizontal");
         _vertical = Input.GetAxis("Vertical");
 
+        if(Input.GetButtonDown("Fire2"))
+        {
+            _normalCamera.SetActive(false);
+            _aimCamera.SetActive(true);
+        }
+        else if(Input.GetButtonDown("Fire2"))
+        {
+            _normalCamera.SetActive(true);
+            _aimCamera.SetActive(false);
+        }
+
         if(Input.GetButtonDown("Jump") && IsGrounded())
         {
             Jump();
@@ -65,7 +80,7 @@ public class TPSControler : MonoBehaviour
 
         if(move != Vector3.zero)
         {
-        float targetAngle = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg * _camera.eulerAngles.y;
+        float targetAngle = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg + _camera.eulerAngles.y;
         Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
         _controller.Move(moveDirection * _movementSpeed * Time.deltaTime);
         }
@@ -95,4 +110,8 @@ public class TPSControler : MonoBehaviour
         return Physics.CheckSphere(_sensorPosition.position, _sensorRadius, _sueloLayer);
     }
 
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 }
