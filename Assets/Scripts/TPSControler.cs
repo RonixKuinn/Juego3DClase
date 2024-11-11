@@ -55,13 +55,20 @@ public class TPSControler : MonoBehaviour
 
     void Movement()
     {
-        Vector3 direction = new Vector3(_horizontal, 0, _vertical);
+        Vector3 move = new Vector3(_horizontal, 0, _vertical);
         
         yAsis.Update(Time.deltaTime);
         xAsis.Update(Time.deltaTime);
 
         transform.rotation = Quaternion.Euler(0, xAsis.Value, 0);
         _lookAtPlayer.rotation = Quaternion.Euler(xAsis.Value, yAsis.Value, 0);
+
+        if(move != Vector3.zero)
+        {
+        float targetAngle = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg * _camera.eulerAngles.y;
+        Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
+        _controller.Move(moveDirection * _movementSpeed * Time.deltaTime);
+        }
     }
 
     void Gravity()
