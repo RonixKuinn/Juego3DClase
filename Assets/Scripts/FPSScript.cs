@@ -12,7 +12,6 @@ public class FPSScript : MonoBehaviour
     private float _horizontal;
     private float _vertical;
     private float _xRotation;
-    private float _yRotation;
 
     [SerializeField] private float _sensitivity = 100;
     [SerializeField] private float _movementSpeed = 5;
@@ -59,10 +58,12 @@ public class FPSScript : MonoBehaviour
         _xRotation -= mouseY;
         _xRotation = Mathf.Clamp(_xRotation, -90, 90);
 
-        _yRotation += mouseX;
-
         _camera.localRotation = Quaternion.Euler(_xRotation, 0, 0);
-        transform.rotation = Quaternion.Euler(0, _yRotation, 0);
+        transform.Rotate(Vector3.up * mouseX);
+
+        Vector3 move = transform.right * _horizontal + transform.forward * _vertical;
+
+        _controller.Move(move * _movementSpeed * Time.deltaTime);
     }
 
     void Gravity()
