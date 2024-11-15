@@ -123,6 +123,7 @@ public class NewBehaviourScript : MonoBehaviour
 
     void Jump()
     {
+        _animator.SetBool("IsJumping", true);
         _playerGravity.y = Mathf.Sqrt(_jumpHeight * -2 * _gravity);
     }
 
@@ -140,15 +141,19 @@ public class NewBehaviourScript : MonoBehaviour
             {
                 Debug.DrawRay(_sensorPosition.position, -transform.up * 2, Color.green);
                 return true;
+                
             }
             else
             {
                 return false;
+                
             }
+            
         }
         else
         {
             return false;
+            
         }
     }
 
