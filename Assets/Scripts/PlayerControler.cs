@@ -9,6 +9,7 @@ public class NewBehaviourScript : MonoBehaviour
     //---------Componentes-----------//
     private CharacterController _controller;
     private Transform _camera;
+    private Animator _animator;
 
     //---------Inputs-----------//
     private float _horizontal;
@@ -38,15 +39,14 @@ public class NewBehaviourScript : MonoBehaviour
     {
         _controller = GetComponent<CharacterController>();
         _camera = Camera.main.transform;
+        _animator = GetComponentInChildren<Animator>();
     }
 
     void Update()
     {
         _horizontal = Input.GetAxis("Horizontal");
         _vertical = Input.GetAxis("Vertical");
-
        
-
         if(Input.GetButtonDown("Jump") && IsGrounded())
         {
             Jump();
@@ -73,6 +73,9 @@ public class NewBehaviourScript : MonoBehaviour
     {
         Vector3 direction = new Vector3(_horizontal, 0, _vertical);
 
+        _animator.SetFloat("VelZ", _vertical);
+        _animator.SetFloat("VelX", _horizontal);
+
         float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + _camera.eulerAngles.y;
         float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, _camera.eulerAngles.y, ref _turnSmothVelocity, _turnSmoothTime);
 
@@ -89,6 +92,9 @@ public class NewBehaviourScript : MonoBehaviour
     void Movement()
     {
         Vector3 direction = new Vector3(_horizontal, 0, _vertical);
+
+        _animator.SetFloat("VelZ", direction.magnitude);
+        _animator.SetFloat("VelX", 0);
         
         if(direction != Vector3.zero)
         {
