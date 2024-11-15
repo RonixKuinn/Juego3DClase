@@ -91,3 +91,4 @@ public class FPSScript : MonoBehaviour
         return Physics.CheckSphere(_sensorPosition.position, _sensorRadius, _sueloLayer);
     }
 }
+//AAAAAAAAAA
