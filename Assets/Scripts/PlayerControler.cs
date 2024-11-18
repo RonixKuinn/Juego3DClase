@@ -189,8 +189,18 @@ public class NewBehaviourScript : MonoBehaviour
         }
     }
 
-    void Start()
+    void OnCollisionEnter(BoxCollider collider)
     {
-        
+        if (collider.gameObject.layer == 7)
+        {
+            Die();
+        }
+    }
+
+
+    void Die()
+    {
+        _animator.SetBool("IsDeath", true);
+        Destroy(gameObject, 0.7f);
     }
 }

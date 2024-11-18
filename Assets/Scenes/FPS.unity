@@ -1130,7 +1130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sensitivity: 100
   _movementSpeed: 5
-  _jumpHeight: 1
+  _jumpHeight: 10
   _pushForce: 10
   _gravity: -9.81
   _playerGravity: {x: 0, y: 0, z: 0}
